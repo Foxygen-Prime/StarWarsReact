@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import '../styles/App.css';
 
-https: //swapi.co/api/vehicles/
+ //swapi.co/api/vehicles/
 
   class App extends Component {
     // PROPS AND STATE
@@ -11,10 +11,9 @@ https: //swapi.co/api/vehicles/
         super(props);
 
         this.state = {
-          pilot: '',
           vehicles: [],
           value: '',
-          pilot: '',
+          pilot: ''
         };
         // FORM: HANDLE INPUT CHANGES
         // handleNameChange below:
@@ -27,22 +26,28 @@ https: //swapi.co/api/vehicles/
 
 
       handleNameChange(event) {
-        this.setState({
-          name: event.target.value
+        this.setState({value: event.target.value
         });
       }
+
       handleSubmit(event) {
         event.preventDefault();
         alert('Thank you, ' + this.state.pilot + ' your name was submitted');
+        this.setState(
+          {
+            pilot: this.state.value,
+            value: ''
+          })
       }
 
       componentWillMount() {
-        fetch(' https://swapi.co/api/vehicles/')
+        fetch('https://swapi.co/api/vehicles/')
           .then(r => r.json())
           .then((json) => {
             console.log("Data from componentWillMount fetch", json)
+              let vehicles = json.results;
             this.setState({
-              SWvehicles: json
+              vehicles: vehicles
             })
           })
       }
@@ -76,47 +81,69 @@ https: //swapi.co/api/vehicles/
     // Rendering: create a 'card' for each of the vehicles. consult the Bootstrap 4 docs for details.
     // Enter your code below:
 
-    render() {
-          let vehicles = this.state.vehicles;
+  render() {
+    let vehicleArray = this.state.vehicles;
+    let vehicles = vehicleArray.map((vehicles) => {
       /*
       Store vehicles state in a variable.
       Map over this variable to access the values needed to render.
       */
-
-      return (
-        <div className = "App">
-
-          <div className="jumbotron">
-            <h1>Star Wars</h1>
-          </div>
-        <div>
-          <form onSubmit = {this.handleSubmit}>
-            <div>
-              <label>Your Name:<input onChange = {this.handleNameChange} name = "name" type = "text" value = {this.state.pilot}/>
-              </label>
-              <input type = "submit" value = "Submit"/>
-            </div>
-        </div>
-          </form>
-            <div>
-              {this.state.vehicles.map( (pilotName) => {
-                return <div key={index}>
-                  <p>Name:{pilotName.pilot}</p>
+        return (
+        /* Create the vehicle card below: */
+        < div key = {vehicles.name} className = "col-md-4" >
+          <div className="card">
+            <div className="card-block">
+              <h4 className="card-title">Vehicle: {vehicles.name}</h4>
+              <h5 className="card-subtitle mb-2 text-muted">Model: {vehicles.model}</h5>
+              <div className="card">
+                <div className="card-block">
+                  <h5 className="card-subtitle mb-2 text-muted">Specs</h5>
+                  <ul className="list-group list-group-flush">
+                    <li className="list-group-item">Manufacturer: {vehicles.manufacturer}</li>
+                    <li className="list-group-item">Class: {vehicles.vehicle_class}</li>
+                    <li className="list-group-item">Passengers: {vehicles.passengers}</li>
+                    <li className="list-group-item">Crew: {vehicles.crew}</li>
+                    <li className="list-group-item">Length: {vehicles.length}</li>
+                    <li className="list-group-item">Max Speed: {vehicles.max_atmosphering_speed}</li>
+                    <li className="list-group-item">Cargo Capacity: {vehicles.cargo_capacity}</li>
+                  </ul>
                 </div>
-              })}
+              </div>
             </div>
-
-        <div name = "vehicleInfo">
-          <div className = "form-group">
-            <input onChange = {this.handleNameChange} className = "form-control col-md-3" name = "name" type = "text" value = {this.state.pilot}/>
           </div>
+        < /div>
+        )
+      })
+      return (
+        <div className="App">
+          {/*
+          The App component needs the following:
+           jumbotron section, form section, vehicle cards section.
+           Your form will also need a header in which you will pass the state of the form upon submit.
+           */}
+          <main className="row">
+            <section className="col-md-10 offset-md-1">
+              <div className="jumbotron">
+                <h1 className="display-3">Star Wars</h1 > <hr className="my-4"/> < p className = "lead" > The Vehicles of Star Wars < /p>
+              </div >
+              <div className="card form">
+                <div className="card-block">
+                  <h2 className="card-title">What is your name, pilot?</h2>
+                  <form onSubmit={this.handleSubmit}>
+                    <div className="form-group">
+                      <input className="form-control col-md-4 offset-md-4" id="pilotName" onChange={this.handleNameChange} name="name" type="text" value={this.state.value} placeholder="Enter your name"/>
+                    </div>
+                    <button type="submit" className="btn btn-primary">Submit</button>
+                  </form>
+                  <h1>{this.state.pilot}</h1>
+                </div>
+              </div>
+              < div className = "row" >
+                {vehicles}
+              < /div>
+            </section >
+          </main>
         </div>
-          /*
-                  The App component needs the following:
-                   jumbotron section, form section, vehicle cards section.
-                   Your form will also need a header in which you will pass the state of the form upon submit.
-                   */
-      </div>
     )
   }
 }
